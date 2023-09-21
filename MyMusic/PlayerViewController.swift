@@ -40,6 +40,12 @@ class PlayerViewController: UIViewController {
         label.numberOfLines = 0
         return label
     }()
+    lazy var slider: UISlider = {
+        let slider = UISlider()
+        slider.value = 0.5
+        slider.addTarget(self, action: #selector(didSlide(_:)), for: .valueChanged)
+        return slider
+    }()
     
     //MARK: - Properties
     @IBOutlet var holder: UIView!
@@ -65,6 +71,55 @@ class PlayerViewController: UIViewController {
     
     func configure() {
         let song = songs[position]
+        
+        playSong(song: song)
+        setConstraints(song: song)
+        
+        
+    }
+}
+
+extension PlayerViewController {
+    
+    // MARK: - Public methods
+    @objc func didSlide(_ slider: UISlider) {
+        let value = slider.value
+        player?.volume = value
+    }
+    
+    // MARK: - Private methods
+    private func setConstraints(song: Song) {
+        [albumImageView, songNameLabel, artistNameLabel, albumNameLabel, slider]
+            .forEach { holder.addSubview($0) }
+        
+        albumImageView.image = UIImage(named: song.imageName)
+        albumImageView.frame = CGRect(x: 10,
+                                      y: 10,
+                                      width: holder.frame.size.width-20,
+                                      height: holder.frame.size.height-20)
+        songNameLabel.frame = CGRect(x: 10,
+                                     y: albumImageView.frame.size.height + 10,
+                                     width: holder.frame.size.width-20,
+                                     height: 70)
+        albumNameLabel.frame = CGRect(x: 10,
+                                      y: albumImageView.frame.size.height + 10 + 70 ,
+                                      width: holder.frame.size.width-20,
+                                      height:  70)
+        artistNameLabel.frame = CGRect(x: 10,
+                                       y: albumImageView.frame.size.height + 10 + 140,
+                                       width: holder.frame.size.width-20,
+                                       height: 70)
+        slider.frame = CGRect(x: 20,
+                              y: holder.frame.size.height-60,
+                              width: holder.frame.size.width-40,
+                              height: 50)
+        songNameLabel.text = song.name
+        albumNameLabel.text = song.albumName
+        artistNameLabel.text = song.artistName
+        
+    }
+    
+    private func playSong(song: Song) {
         let urlString = Bundle.main.path(forResource: song.trackName, ofType: "mp3")
         
         do {
@@ -75,35 +130,10 @@ class PlayerViewController: UIViewController {
             
             player = try AVAudioPlayer(contentsOf: URL(string: urlString)!)
             guard let player = player else { return }
+            player.volume = 0.5
             player.play()
         } catch {
             print("error occurred")
         }
-        
-        //MARK: - Constraints
-        [albumImageView, songNameLabel, artistNameLabel, albumNameLabel]
-            .forEach { holder.addSubview($0) }
-         
-        albumImageView.image = UIImage(named: song.imageName)
-        albumImageView.frame = CGRect(x: 10,
-                                      y: 10,
-                                      width: holder.frame.size.width-20,
-                                      height: holder.frame.size.height-20)
-        songNameLabel.frame = CGRect(x: 10, 
-                                     y: albumImageView.frame.size.height + 10,
-                                     width: holder.frame.size.width-20,
-                                     height: 70)
-        albumNameLabel.frame = CGRect(x: 10, 
-                                      y: albumImageView.frame.size.height + 10 + 70 ,
-                                      width: holder.frame.size.width-20,
-                                      height:  70)
-        artistNameLabel.frame = CGRect(x: 10,
-                                       y: albumImageView.frame.size.height + 10 + 140,
-                                       width: holder.frame.size.width-20,
-                                       height: 70)
-        songNameLabel.text = song.name
-        albumNameLabel.text = song.albumName
-        artistNameLabel.text = song.artistName
-        
     }
 }

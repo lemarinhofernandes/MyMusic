@@ -101,7 +101,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         let position = indexPath.row
         
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: "player") else { return }
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: "player") as? PlayerViewController else { return }
+        vc.songs = songs
+        vc.position = position
         present(vc, animated: true)
     }
 }

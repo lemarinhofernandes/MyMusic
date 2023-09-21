@@ -65,6 +65,36 @@
             </objects>
             <point key="canvasLocation" x="1063.3587786259541" y="3.5211267605633805"/>
         </scene>
+        <!--Player View Controller-->
+        <scene sceneID="KoB-Yf-x6z">
+            <objects>
+                <viewController storyboardIdentifier="player" id="WU5-Vn-tf6" customClass="PlayerViewController" customModule="MyMusic" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="U8H-O6-b8R">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kqG-Xs-VOa">
+                                <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="kkq-I2-111"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="kkq-I2-111" firstAttribute="bottom" secondItem="kqG-Xs-VOa" secondAttribute="bottom" id="FLt-PH-SXm"/>
+                            <constraint firstItem="kkq-I2-111" firstAttribute="trailing" secondItem="kqG-Xs-VOa" secondAttribute="trailing" id="WXJ-Jh-der"/>
+                            <constraint firstItem="kqG-Xs-VOa" firstAttribute="top" secondItem="kkq-I2-111" secondAttribute="top" id="cR5-Db-1Hk"/>
+                            <constraint firstItem="kqG-Xs-VOa" firstAttribute="leading" secondItem="kkq-I2-111" secondAttribute="leading" id="w3w-yd-219"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="holder" destination="kqG-Xs-VOa" id="GGT-LG-RDK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iBg-aH-vVr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2005" y="4"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="IW4-ZQ-INh">
             <objects>

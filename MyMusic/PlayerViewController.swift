@@ -105,5 +105,6 @@ class PlayerViewController: UIViewController {
         albumNameLabel.text = song.albumName
         artistNameLabel.text = song.artistName
         
+        
     }
 }

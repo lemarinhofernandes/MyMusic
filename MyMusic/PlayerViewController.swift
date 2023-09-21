@@ -40,11 +40,36 @@ class PlayerViewController: UIViewController {
         label.numberOfLines = 0
         return label
     }()
-    lazy var slider: UISlider = {
+    
+    private var slider: UISlider = {
         let slider = UISlider()
         slider.value = 0.5
-        slider.addTarget(self, action: #selector(didSlide(_:)), for: .valueChanged)
+        slider.addTarget(PlayerViewController.self, action: #selector(didSlide(_:)), for: .valueChanged)
         return slider
+    }()
+    
+    private let playPauseButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+        button.tintColor = .black
+        button.addTarget(self, action: #selector(didTapPlayStopButton), for: .touchUpInside)
+        return button
+    }()
+    
+    private let nextButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "forward.fill"), for: .normal)
+        button.tintColor = .black
+        button.addTarget(self, action: #selector(didTapNextButton), for: .touchUpInside)
+        return button
+    }()
+    
+    private let backButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage(systemName: "backward.fill"), for: .normal)
+        button.tintColor = .black
+        button.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        return button
     }()
     
     //MARK: - Properties
@@ -87,10 +112,48 @@ extension PlayerViewController {
         player?.volume = value
     }
     
+    @objc func didTapBackButton() {
+        guard let player = player else { return }
+        if position > 0 {
+            position -= 1
+            player.stop()
+            for subview in holder.subviews {
+                subview.removeFromSuperview()
+            }
+            configure()
+        }
+    }
+    
+    @objc func didTapNextButton() {
+        guard let player = player else { return }
+        if position < songs.count - 1 {
+            position -= 1
+            player.stop()
+            for subview in holder.subviews {
+                subview.removeFromSuperview()
+            }
+            configure()
+        }
+    }
+    
+    @objc func didTapPlayStopButton() {
+        guard let player = player else { return }
+        
+        if player.isPlaying {
+            player.stop()
+            playPauseButton.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
+            return
+        }
+        player.play()
+        playPauseButton.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+    }
+    
     // MARK: - Private methods
     private func setConstraints(song: Song) {
-        [albumImageView, songNameLabel, artistNameLabel, albumNameLabel, slider]
-            .forEach { holder.addSubview($0) }
+        let yPosition = artistNameLabel.frame.origin.y+70+20
+        let size: CGFloat = 70
+        
+        
         
         albumImageView.image = UIImage(named: song.imageName)
         albumImageView.frame = CGRect(x: 10,
@@ -102,7 +165,7 @@ extension PlayerViewController {
                                      width: holder.frame.size.width-20,
                                      height: 70)
         albumNameLabel.frame = CGRect(x: 10,
-                                      y: albumImageView.frame.size.height + 10 + 70 ,
+                                      y: albumImageView.frame.size.height - 10 -  70 ,
                                       width: holder.frame.size.width-20,
                                       height:  70)
         artistNameLabel.frame = CGRect(x: 10,
@@ -113,6 +176,22 @@ extension PlayerViewController {
                               y: holder.frame.size.height-60,
                               width: holder.frame.size.width-40,
                               height: 50)
+        playPauseButton.frame = CGRect(x: (holder.frame.size.width-size)/2.0,
+                                       y: yPosition,
+                                       width: size,
+                                       height: size)
+        nextButton.frame = CGRect(x: holder.frame.size.width-size-20,
+                                  y: yPosition,
+                                  width: size,
+                                  height: size)
+        backButton.frame = CGRect(x: 20,
+                                  y: yPosition,
+                                  width: size,
+                                  height: size)
+        
+        [albumImageView, songNameLabel, artistNameLabel, albumNameLabel, slider, playPauseButton, nextButton, backButton]
+            .forEach { holder.addSubview($0) }
+        
         songNameLabel.text = song.name
         albumNameLabel.text = song.albumName
         artistNameLabel.text = song.artistName

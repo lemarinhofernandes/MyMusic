@@ -44,7 +44,7 @@ class PlayerViewController: UIViewController {
     private var slider: UISlider = {
         let slider = UISlider()
         slider.value = 0.5
-        slider.addTarget(PlayerViewController.self, action: #selector(didSlide(_:)), for: .valueChanged)
+        slider.addTarget(self, action: #selector(didSlide(_:)), for: .valueChanged)
         return slider
     }()
     
@@ -126,8 +126,8 @@ extension PlayerViewController {
     
     @objc func didTapNextButton() {
         guard let player = player else { return }
-        if position < songs.count - 1 {
-            position -= 1
+        if position < songs.count  - 1 {
+            position += 1
             player.stop()
             for subview in holder.subviews {
                 subview.removeFromSuperview()
@@ -142,10 +142,22 @@ extension PlayerViewController {
         if player.isPlaying {
             player.stop()
             playPauseButton.setBackgroundImage(UIImage(systemName: "play.fill"), for: .normal)
+            UIView.animate(withDuration: 0.5) {
+                self.albumImageView.frame = CGRect(x: 30,
+                                                   y: 30,
+                                                   width: self.holder.frame.size.width-60,
+                                                   height: self.holder.frame.size.height-60)
+            }
             return
         }
         player.play()
         playPauseButton.setBackgroundImage(UIImage(systemName: "pause.fill"), for: .normal)
+        UIView.animate(withDuration: 0.5) {
+            self.albumImageView.frame = CGRect(x: 10,
+                                               y: 10,
+                                               width: self.holder.frame.size.width-20,
+                                               height: self.holder.frame.size.height-20)
+        }
     }
     
     // MARK: - Private methods
@@ -153,7 +165,8 @@ extension PlayerViewController {
         let yPosition = artistNameLabel.frame.origin.y+70+20
         let size: CGFloat = 70
         
-        
+        [albumImageView, songNameLabel, artistNameLabel, albumNameLabel, slider, playPauseButton, nextButton, backButton]
+            .forEach { holder.addSubview($0) }
         
         albumImageView.image = UIImage(named: song.imageName)
         albumImageView.frame = CGRect(x: 10,
@@ -188,10 +201,6 @@ extension PlayerViewController {
                                   y: yPosition,
                                   width: size,
                                   height: size)
-        
-        [albumImageView, songNameLabel, artistNameLabel, albumNameLabel, slider, playPauseButton, nextButton, backButton]
-            .forEach { holder.addSubview($0) }
-        
         songNameLabel.text = song.name
         albumNameLabel.text = song.albumName
         artistNameLabel.text = song.artistName

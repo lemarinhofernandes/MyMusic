@@ -12,6 +12,7 @@ class PlayerViewController: UIViewController {
     //MARK: - Public properties
     public var position: Int = 0
     public var songs: [Song] = []
+    //a
     
     //MARK: - Private properties
     private let albumImageView: UIImageView = {
